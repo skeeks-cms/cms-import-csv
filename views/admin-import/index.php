@@ -6,56 +6,49 @@
  * @date 08.03.2016
  */
 /* @var $this yii\web\View */
+/* @var $model \skeeks\cms\importCsvContent\models\ImportTaskModel */
 use \skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab as ActiveForm;
 ?>
 <? $form = ActiveForm::begin([
     'id' => 'sx-form',
     'usePjax' => false,
-    'useAjaxSubmit' => true,
+    'useAjaxSubmit' => false,
     'enableAjaxValidation' => true,
-    'validationUrl' => \skeeks\cms\helpers\UrlHelper::construct(['/admin-import-stock-sale/validate'])->enableAdmin()->toString(),
-
-    'afterValidateCallback'                     => new \yii\web\JsExpression(<<<JS
-        function(jForm, ajaxQuery){
-            ajaxQuery.bind('success', function(e, responseObject)
-            {
-                var counter = responseObject.response.data.countRows;
-                if (counter)
-                {
-                    var Blocker = new sx.classes.Blocker($("#sx-form"));
-
-                    sx.Import.TaskManager.bind('start', function()
-                    {
-                        $("#sx-rows").empty().append( $("<h1>").append(counter) );
-                        Blocker.block();
-                    });
-
-                    sx.Import.TaskManager.bind('stop', function()
-                    {
-                        $("#sx-rows").empty().append( $("<h1>").append("Готово!") );
-                        Blocker.unblock();
-                    });
-
-                    sx.Import.loadTasks(counter);
-                    sx.Import.TaskManager.start();
-
-
-                } else
-                {
-                    sx.error('Не удалось разобрать файл');
-                }
-            });
-        };
-JS
-    )
+    'validationUrl' => \skeeks\cms\helpers\UrlHelper::construct(['/importCsvContent/admin-import/validate'])->enableAdmin()->toString(),
 ]); ?>
+
+    <? $this->registerJs(<<<JS
+$("#importtaskmodel-importfilepath").on('change', function()
+{
+    $("#sx-form").submit();
+    return false;
+});
+JS
+); ?>
+
     <?= $form->fieldSet('Основное'); ?>
         <?= $form->field($model, 'importFilePath')->widget(
             \skeeks\cms\modules\admin\widgets\formInputs\OneImage::className()
         ); ?>
+        <?= $form->field($model, 'cms_content_id')->listBox(\skeeks\cms\models\CmsContent::getDataForSelect(), ['size' => 1]); ?>
     <?= $form->fieldSetEnd();?>
 
-    <?= $form->buttonsStandart($model);?>
+    <? if ($model->importFilePath) : ?>
+
+        <?= $form->fieldSet('Настройки'); ?>
+            <?= $form->field($model, 'csv_type')->radioList(\skeeks\cms\importCsvContent\models\ImportTaskModel::getCsvTypes()); ?>
+        <?= $form->fieldSetEnd();?>
+
+        <?= $form->fieldSet('Поля'); ?>
+            <? if ($model->getCsvColumns()) : ?>
+                <? foreach ($model->getCsvColumns() as $key => $name) : ?>
+                    <p>Поле <?= $key; ?> (<?= $name; ?>)</p>
+                <? endforeach; ?>
+            <? endif; ?>
+        <?= $form->fieldSetEnd();?>
+    <? endif; ?>
+
+    <?/*= $form->buttonsStandart($model);*/?>
 <? ActiveForm::end(); ?>
 <br />
 <br />

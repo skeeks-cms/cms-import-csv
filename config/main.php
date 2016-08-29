@@ -23,7 +23,7 @@ return [
 
     'modules' =>
     [
-        'seo' => [
+        'importCsvContent' => [
             'class'         => 'skeeks\cms\importCsvContent\ImportCsvContentModule',
         ]
     ]
