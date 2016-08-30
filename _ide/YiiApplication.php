@@ -9,10 +9,10 @@
  * @date 10.09.2015
  */
 namespace yii\web;
-use skeeks\cms\importCsvContent\ImportCsvContentModule;
+use skeeks\cms\importCsv\ImportCsvComponent;
 
 /**
- * @property ImportCsvContentModule $importCsvContent
+ * @property ImportCsvComponent $importCsv
 
  * Class Application
  * @package yii\web

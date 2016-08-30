@@ -7,6 +7,7 @@
  */
 namespace skeeks\cms\importCsv\models;
 
+use skeeks\cms\importCsv\handlers\CsvHandler;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -23,6 +24,8 @@ use yii\helpers\ArrayHelper;
  * @property string $description
  * @property string $component
  * @property string $component_settings
+ *
+ * @property CsvHandler $handler
  */
 class ImportTaskCsv extends \skeeks\cms\models\Core
 {
@@ -63,4 +66,31 @@ class ImportTaskCsv extends \skeeks\cms\models\Core
         ]);
     }
 
+    /**
+     * @return CsvHandler
+     * @throws \skeeks\cms\importCsv\InvalidParamException
+     */
+    public function getHandler()
+    {
+        if ($this->component)
+        {
+            try
+            {
+                /**
+                 * @var $component Component
+                 */
+                $component = \Yii::$app->importCsv->getHandler($this->component);
+                $component->taskModel = $this;
+                $component->load($this->component_settings, "");
+
+                return $component;
+            } catch (\Exception $e)
+            {
+                return false;
+            }
+
+        }
+
+        return null;
+    }
 }

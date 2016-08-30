@@ -6,6 +6,8 @@
  * @date 29.08.2016
  */
 namespace skeeks\cms\importCsv\handlers;
+
+use skeeks\cms\importCsv\models\ImportTaskCsv;
 use yii\base\Model;
 
 /**
@@ -18,7 +20,25 @@ abstract class CsvHandler extends Model
     const CSV_TYPE_FIXED    = 'fixed';          //фиксированная ширина полей
     const CSV_TYPE_DELIMETR = 'delimetr';       //с разделителями - поля разделяются специальным символом
 
+    /**
+     * @var string
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
     public $csv_type = self::CSV_TYPE_DELIMETR; //R|F
+
+    /**
+     * @var string
+     */
+    public $name = 'Name';
+
+    /**
+     * @var ImportTaskCsv
+     */
+    public $taskModel = null;
 
     static public function getCsvTypes()
     {
