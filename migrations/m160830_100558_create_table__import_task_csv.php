@@ -37,7 +37,7 @@ class m160830_100558_create_table__import_task_csv extends Migration
             'name'                  => $this->string(255)->comment('Name'),
             'description'           => $this->text()->comment('description'),
 
-            'component'             => $this->string(255),
+            'component'             => $this->string(255)->notNull(),
             'component_settings'    => $this->text(),
 
         ], $tableOptions);

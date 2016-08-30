@@ -22,9 +22,9 @@ return
                 'items' =>
                 [
                     [
-                        "label"     => \Yii::t('skeeks/importCsv', "Import CSV  items"),
+                        "label"     => \Yii::t('skeeks/importCsv', "Import CSV"),
                         "img"       => ['\skeeks\cms\importCsv\assets\ImportCsvAsset', 'icons/csv.png'],
-                        "url"   => ["importCsv/admin-import"],
+                        "url"       => ["importCsv/admin-import-task"],
                     ],
                 ],
             ],

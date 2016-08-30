@@ -3,25 +3,20 @@
  * @author Semenov Alexander <semenov@skeeks.com>
  * @link http://skeeks.com/
  * @copyright 2010 SkeekS (СкикС)
- * @date 08.03.2016
+ * @date 29.08.2016
  */
-namespace skeeks\cms\importCsv\models;
+namespace skeeks\cms\importCsv\handlers;
 use yii\base\Model;
 
 /**
- * @property string $rootImportFilePath
+ * Class CsvHandler
  *
- * Class ImportTaskModel
- *
- * @package skeeks\cms\importCsv\models
+ * @package skeeks\cms\importCsv\handlers
  */
-class ImportTaskModel extends Model
+abstract class CsvHandler extends Model
 {
-    const CSV_TYPE_FIXED    = 'fixed'; //фиксированная ширина полей
-    const CSV_TYPE_DELIMETR = 'delimetr';     //с разделителями - поля разделяются специальным символом
-
-    public $importFilePath = null;
-    public $cms_content_id = null;
+    const CSV_TYPE_FIXED    = 'fixed';          //фиксированная ширина полей
+    const CSV_TYPE_DELIMETR = 'delimetr';       //с разделителями - поля разделяются специальным символом
 
     public $csv_type = self::CSV_TYPE_DELIMETR; //R|F
 
@@ -32,6 +27,7 @@ class ImportTaskModel extends Model
             self::CSV_TYPE_FIXED    => 'фиксированная ширина полей',
         ];
     }
+
 
     /**
      * @return bool|string
@@ -44,12 +40,6 @@ class ImportTaskModel extends Model
     public function rules()
     {
         return [
-            ['importFilePath' , 'string'],
-            ['importFilePath' , 'required'],
-
-            ['cms_content_id' , 'required'],
-            ['cms_content_id' , 'integer'],
-
             ['csv_type' , 'required'],
             ['csv_type' , 'string'],
             ['csv_type' , 'default', 'value' => self::CSV_TYPE_DELIMETR],
@@ -59,15 +49,16 @@ class ImportTaskModel extends Model
     public function attributeLabels()
     {
         return [
-            'importFilePath'    => \Yii::t('skeeks/importCsvContent', 'The path to the file import CSV'),
-            'cms_content_id'    => \Yii::t('skeeks/importCsvContent', 'Content'),
             'csv_type'          => \Yii::t('skeeks/importCsvContent', 'CSV type'),
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getCsvColumns()
     {
-        $handle = fopen($this->getRootImportFilePath(), "r");
+        $handle = fopen($this->rootImportFilePath, "r");
 
         while (($data = fgetcsv($handle, 0, ";")) !== FALSE)
         {

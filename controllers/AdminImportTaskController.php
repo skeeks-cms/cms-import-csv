@@ -7,17 +7,27 @@
  */
 namespace skeeks\cms\importCsv\controllers;
 use skeeks\cms\helpers\RequestResponse;
+use skeeks\cms\importCsv\models\ImportTaskCsv;
 use skeeks\cms\importCsvContent\models\ImportTaskModel;
+use skeeks\cms\modules\admin\actions\modelEditor\AdminModelEditorAction;
 use skeeks\cms\modules\admin\controllers\AdminController;
+use skeeks\cms\modules\admin\controllers\AdminModelEditorController;
 
 /**
  * Class AdminImportController
  *
  * @package skeeks\cms\importCsv\controllers
  */
-class AdminImportController extends AdminController
+class AdminImportTaskController extends AdminModelEditorController
 {
-    public function actionIndex()
+    public function init()
+    {
+        $this->name                 = \Yii::t('skeeks/importCsv', 'Import');
+        $this->modelShowAttribute   = "id";
+        $this->modelClassName       = ImportTaskCsv::className();
+    }
+
+    /*public function actionIndex()
     {
         $rr         = new RequestResponse();
         $model      = new ImportTaskModel();
@@ -31,7 +41,6 @@ class AdminImportController extends AdminController
 
     /**
      * @return array
-     */
     public function actionValidate()
     {
         $rr = new RequestResponse();
@@ -45,7 +54,6 @@ class AdminImportController extends AdminController
 
     /**
      * @return RequestResponse
-     */
     public function actionImportElements()
     {
         $rr = new RequestResponse();
@@ -53,10 +61,10 @@ class AdminImportController extends AdminController
         if (\Yii::$app->request->isAjax && \Yii::$app->request->post())
         {
             /*$model->importFilePath = \Yii::$app->request->post('importfilepath');
-            $model->importProducts(\Yii::$app->request->post('rowStart'), \Yii::$app->request->post('rowEnd'));*/
+            $model->importProducts(\Yii::$app->request->post('rowStart'), \Yii::$app->request->post('rowEnd'))
 
             $rr->success = true;
             return $rr;
         }
-    }
+    }*/
 }
