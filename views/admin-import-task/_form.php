@@ -10,25 +10,21 @@ use skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab as ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model \skeeks\cms\importCsv\models\ImportTaskCsv */
-
-$model->load(\Yii::$app->request->get());
-$handler = $model->handler;
-if ($handler)
-{
-    $handler->load(\Yii::$app->request->get());
-}
+/* @var $handler \skeeks\cms\importCsv\handlers\CsvHandler */
 ?>
+
+
+
+<?php $form = ActiveForm::begin([
+    'id'                                            => 'sx-import-csv-form',
+    'enableAjaxValidation'                          => false,
+]); ?>
 
 <? $this->registerJs(<<<JS
 
 (function(sx, $, _)
 {
     sx.classes.CsvImport = sx.classes.Component.extend({
-
-        _init: function()
-        {
-
-        },
 
         _onDomReady: function()
         {
@@ -37,12 +33,10 @@ if ($handler)
             $("#importtaskcsv-file_path").on('change', function()
             {
                 self.update();
-                return false;
             });
             $("#importtaskcsv-component").on('change', function()
             {
                 self.update();
-                return false;
             });
         },
 
@@ -51,13 +45,12 @@ if ($handler)
             _.delay(function()
             {
                 var jForm = $("#sx-import-csv-form");
-                var newForm = jForm.clone();
-                newForm.appendTo('body');
-                newForm.attr('method', 'get');
-                $("[name=_csrf]", newForm).remove();
-                newForm.hide();
-                console.log(jForm.serialize());
-                console.log(newForm.serialize());
+                jForm.append($('<input>', {'type': 'hidden', 'name' : 'sx-not-submit', 'value': 'true'}));
+                jForm.submit();
+                /*var newForm = jForm.clone();
+                newForm.appendTo('body');*/
+                //$("[name=_csrf]", newForm).remove();
+                //newForm.hide();
                 //newForm.submit();
             }, 200);
         }
@@ -70,29 +63,27 @@ if ($handler)
 JS
 ); ?>
 
-<?php $form = ActiveForm::begin([
-    'id' => 'sx-import-csv-form',
-]); ?>
-
-    <?= $form->fieldSet("Общие настройки"); ?>
+    <?= \skeeks\cms\modules\admin\widgets\BlockTitleWidget::widget(['content' => 'Базовые настройки']); ?>
 
     <?= $form->field($model, 'file_path')->widget(
         \skeeks\cms\modules\admin\widgets\formInputs\OneImage::className()
     ); ?>
 
-    <?= $form->field($model, 'component')->listBox(\yii\helpers\ArrayHelper::map(
+    <?= $form->field($model, 'component')->listBox(array_merge(['' => ' - '], \yii\helpers\ArrayHelper::map(
         \Yii::$app->importCsv->handlers, 'id', 'name'
-    ), ['size' => 1]); ?>
+    )), ['size' => 1]); ?>
+
+
+<? if ($handler && $model->file_path) : ?>
+
+    <?= \skeeks\cms\modules\admin\widgets\BlockTitleWidget::widget(['content' => 'Настройки импорта']); ?>
+    <?= $handler->renderConfigForm($form); ?>
+
+    <?= \skeeks\cms\modules\admin\widgets\BlockTitleWidget::widget(['content' => 'Сохранение задания']); ?>
 
     <?= $form->field($model, 'name'); ?>
     <?= $form->field($model, 'description')->textarea(['rows' => 5]); ?>
-
-<?= $form->fieldSetEnd(); ?>
-<? if ($handler && $model->file_path) : ?>
-    <?= $form->fieldSet("Настройки компонента"); ?>
-        <?= $handler->renderConfigForm($form); ?>
-    <?= $form->fieldSetEnd(); ?>
 <? endif; ?>
 
-<?= $form->buttonsCreateOrUpdate($model); ?>
+<?= $form->buttonsStandart($model, ['save', 'close']); ?>
 <?php ActiveForm::end(); ?>

@@ -12,6 +12,8 @@ use skeeks\cms\importCsvContent\models\ImportTaskModel;
 use skeeks\cms\modules\admin\actions\modelEditor\AdminModelEditorAction;
 use skeeks\cms\modules\admin\controllers\AdminController;
 use skeeks\cms\modules\admin\controllers\AdminModelEditorController;
+use yii\helpers\ArrayHelper;
+use yii\widgets\ActiveForm;
 
 /**
  * Class AdminImportController
@@ -20,12 +22,135 @@ use skeeks\cms\modules\admin\controllers\AdminModelEditorController;
  */
 class AdminImportTaskController extends AdminModelEditorController
 {
+    public $notSubmitParam = 'sx-not-submit';
+
     public function init()
     {
         $this->name                 = \Yii::t('skeeks/importCsv', 'Import');
         $this->modelShowAttribute   = "id";
         $this->modelClassName       = ImportTaskCsv::className();
     }
+
+    public function actions()
+    {
+        return ArrayHelper::merge(parent::actions(),
+        [
+            'create' =>
+            [
+                'callback'         => [$this, 'create'],
+            ],
+
+            'update' =>
+            [
+                'callback'         => [$this, 'update'],
+            ],
+        ]);
+    }
+
+
+    public function create()
+    {
+        $rr = new RequestResponse();
+
+        $model = new ImportTaskCsv();
+        $model->loadDefaultValues();
+
+        if ($post = \Yii::$app->request->post())
+        {
+            $model->load($post);
+        }
+
+        $handler = $model->handler;
+        if ($handler)
+        {
+            if ($post = \Yii::$app->request->post())
+            {
+                $handler->load($post);
+            }
+        }
+
+        if ($rr->isRequestPjaxPost())
+        {
+            if (!\Yii::$app->request->post($this->notSubmitParam))
+            {
+                if ($model->load(\Yii::$app->request->post()) && $handler->load(\Yii::$app->request->post())
+                    && $model->validate() && $handler->validate())
+                {
+                    \Yii::$app->getSession()->setFlash('success', \Yii::t('app','Saved'));
+
+                    return $this->redirect(
+                        $this->indexUrl
+                    );
+
+                } else
+                {
+                    \Yii::$app->getSession()->setFlash('error', \Yii::t('app','Could not save'));
+                }
+            }
+        }
+
+        return $this->render('_form', [
+            'model'     => $model,
+            'handler'   => $handler,
+        ]);
+    }
+
+
+    public function update()
+    {
+        $rr = new RequestResponse();
+
+        $model = $this->model;
+
+        if ($post = \Yii::$app->request->post())
+        {
+            $model->load($post);
+        }
+
+        $handler = $model->handler;
+        if ($handler)
+        {
+            if ($post = \Yii::$app->request->post())
+            {
+                $handler->load($post);
+            }
+        }
+
+        if ($rr->isRequestPjaxPost())
+        {
+            if (!\Yii::$app->request->post($this->notSubmitParam))
+            {
+                if ($rr->isRequestPjaxPost())
+                {
+                    if ($model->load(\Yii::$app->request->post()) && $handler->load(\Yii::$app->request->post())
+                        && $model->validate() && $handler->validate())
+                    {
+                        \Yii::$app->getSession()->setFlash('success', \Yii::t('app','Saved'));
+
+                        if (\Yii::$app->request->post('submit-btn') == 'apply')
+                        {
+
+                        } else
+                        {
+                            return $this->controller->redirect(
+                                $this->controller->indexUrl
+                            );
+                        }
+
+                        $model->refresh();
+
+                    }
+                }
+            }
+        }
+
+        return $this->render('_form', [
+            'model'     => $model,
+            'handler'   => $handler,
+        ]);
+    }
+
+
 
     /*public function actionIndex()
     {
