@@ -1,6 +1,6 @@
 {
 	"name": "skeeks/cms-import-csv",
-	"description": "Import content items from the csv file",
+	"description": "Universal import from the csv file",
 	"keywords": ["yii", "skeeks", "framework", "component", "seo"],
   	"homepage": "http://cms.skeeks.com/",
 	"type": "yii2-extension",
