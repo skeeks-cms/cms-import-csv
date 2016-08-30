@@ -21,12 +21,12 @@ class ImportCsvComponent extends Component
 {
     public function init()
     {
-        $this->handlers = ArrayHelper::merge([
+        /*$this->handlers = ArrayHelper::merge([
             CsvHandler::className() =>
             [
                 'class' => CsvHandler::className()
             ]
-        ], $this->handlers);
+        ], $this->handlers);*/
 
         parent::init();
     }

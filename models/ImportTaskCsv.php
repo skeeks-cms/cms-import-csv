@@ -26,6 +26,7 @@ use yii\helpers\ArrayHelper;
  * @property string $component_settings
  *
  * @property CsvHandler $handler
+ * @property string $rootFilePath
  */
 class ImportTaskCsv extends \skeeks\cms\models\Core
 {
@@ -92,5 +93,13 @@ class ImportTaskCsv extends \skeeks\cms\models\Core
         }
 
         return null;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getRootFilePath()
+    {
+        return \Yii::getAlias('@frontend/web' . $this->file_path);
     }
 }
