@@ -5,7 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 29.08.2016
  */
-namespace skeeks\cms\importCsvContent;
+namespace skeeks\cms\importCsv;
 use skeeks\cms\base\Component;
 
 use skeeks\cms\helpers\StringHelper;
@@ -17,10 +17,11 @@ use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /**
- * Class CmsSeoComponent
- * @package skeeks\cms\seo
+ * Class ImportCsvComponent
+ *
+ * @package skeeks\cms\importCsv
  */
-class ImportCsvContentModuleComponent extends Component
+class ImportCsvComponent extends Component
 {
     /**
      * Можно задать название и описание компонента

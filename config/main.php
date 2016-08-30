@@ -12,7 +12,7 @@ return [
             [
                 'skeeks/importCsv' => [
                     'class'             => 'yii\i18n\PhpMessageSource',
-                    'basePath'          => '@skeeks/cms/importCsvContent/messages',
+                    'basePath'          => '@skeeks/cms/importCsv/messages',
                     'fileMap' => [
                         'skeeks/importCsv' => 'main.php',
                     ],
@@ -24,7 +24,7 @@ return [
     'modules' =>
     [
         'importCsv' => [
-            'class'         => 'skeeks\cms\importCsvContent\ImportCsvModule',
+            'class'         => 'skeeks\cms\importCsv\ImportCsvModule',
         ]
     ]
 ];

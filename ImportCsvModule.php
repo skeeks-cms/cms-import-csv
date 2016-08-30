@@ -7,11 +7,11 @@
  */
 namespace skeeks\cms\importCsv;
 /**
- * Class ImportCsvContentModule
+ * Class ImportCsvModule
  *
  * @package skeeks\cms\importCsv
  */
-class ImportCsvContentModule extends \yii\base\Module
+class ImportCsvModule extends \yii\base\Module
 {
     public $controllerNamespace = 'skeeks\cms\importCsv\controllers';
 }
