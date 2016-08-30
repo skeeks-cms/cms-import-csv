@@ -5,7 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 08.03.2016
  */
-namespace skeeks\cms\importCsvContent\models;
+namespace skeeks\cms\importCsv\models;
 use yii\base\Model;
 
 /**
@@ -13,7 +13,7 @@ use yii\base\Model;
  *
  * Class ImportTaskModel
  *
- * @package skeeks\cms\importCsvContent\models
+ * @package skeeks\cms\importCsv\models
  */
 class ImportTaskModel extends Model
 {

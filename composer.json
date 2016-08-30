@@ -1,14 +1,14 @@
 {
-	"name": "skeeks/cms-import-csv-content",
+	"name": "skeeks/cms-import-csv",
 	"description": "Import content items from the csv file",
 	"keywords": ["yii", "skeeks", "framework", "component", "seo"],
-  "homepage": "http://cms.skeeks.com/",
+  	"homepage": "http://cms.skeeks.com/",
 	"type": "yii2-extension",
 	"license": "GPL-3.0+",
 	"support": {
         "issues": "http://skeeks.com/",
         "wiki": "http://en.cms.skeeks.com/docs/",
-        "source": "https://github.com/skeeks-cms/cms-seo"
+        "source": "https://github.com/skeeks-cms/cms-import-csv"
     },
 	"authors": [
 		{
@@ -21,7 +21,7 @@
 	},
     "autoload": {
         "psr-4": {
-            "skeeks\\cms\\importCsvContent\\": ""
+            "skeeks\\cms\\importCsv\\": ""
         }
     }
 }

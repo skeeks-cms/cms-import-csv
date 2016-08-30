@@ -5,7 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 15.04.2016
  */
-namespace skeeks\cms\importCsvContent\assets;
+namespace skeeks\cms\importCsv\assets;
 use yii\web\AssetBundle;
 
 /**
@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
  *
  * @package skeeks\cms\importCsvContent\assets
  */
-class ImportCsvContentAsset extends AssetBundle
+class ImportCsvAsset extends AssetBundle
 {
-    public $sourcePath = '@skeeks/cms/importCsvContent/assets';
+    public $sourcePath = '@skeeks/cms/importCsv/assets';
 }

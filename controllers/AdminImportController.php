@@ -5,14 +5,15 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 15.04.2016
  */
-namespace skeeks\cms\importCsvContent\controllers;
+namespace skeeks\cms\importCsv\controllers;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\importCsvContent\models\ImportTaskModel;
 use skeeks\cms\modules\admin\controllers\AdminController;
 
 /**
- * Class AdminSearchPhraseController
- * @package skeeks\cms\controllers
+ * Class AdminImportController
+ *
+ * @package skeeks\cms\importCsv\controllers
  */
 class AdminImportController extends AdminController
 {

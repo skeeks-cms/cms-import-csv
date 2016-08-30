@@ -5,13 +5,13 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 29.08.2016
  */
-namespace skeeks\cms\importCsvContent;
+namespace skeeks\cms\importCsv;
 /**
  * Class ImportCsvContentModule
  *
- * @package skeeks\cms\importCsvContent
+ * @package skeeks\cms\importCsv
  */
 class ImportCsvContentModule extends \yii\base\Module
 {
-    public $controllerNamespace = 'skeeks\cms\importCsvContent\controllers';
+    public $controllerNamespace = 'skeeks\cms\importCsv\controllers';
 }

@@ -9,22 +9,22 @@ return
 [
     'exportImport' =>
     [
-        "label"     => \Yii::t('skeeks/importCsvContent', "Export / Import"),
-        "img"       => ['\skeeks\cms\importCsvContent\assets\ImportCsvContentAsset', 'icons/export.png'],
+        "label"     => \Yii::t('skeeks/importCsv', "Export / Import"),
+        "img"       => ['\skeeks\cms\importCsv\assets\ImportCsvAsset', 'icons/export.png'],
         'priority'  => 400,
 
         'items' =>
         [
             [
-                "label"     => \Yii::t('skeeks/importCsvContent', "Import"),
-                "img"       => ['\skeeks\cms\importCsvContent\assets\ImportCsvContentAsset', 'icons/export.png'],
+                "label"     => \Yii::t('skeeks/importCsv', "Import"),
+                "img"       => ['\skeeks\cms\importCsv\assets\ImportCsvAsset', 'icons/export.png'],
 
                 'items' =>
                 [
                     [
-                        "label"     => \Yii::t('skeeks/importCsvContent', "Import CSV content items"),
-                        "img"       => ['\skeeks\cms\importCsvContent\assets\ImportCsvContentAsset', 'icons/csv.png'],
-                        "url"   => ["importCsvContent/admin-import"],
+                        "label"     => \Yii::t('skeeks/importCsv', "Import CSV  items"),
+                        "img"       => ['\skeeks\cms\importCsv\assets\ImportCsvAsset', 'icons/csv.png'],
+                        "url"   => ["importCsv/admin-import"],
                     ],
                 ],
             ],

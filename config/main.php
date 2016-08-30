@@ -3,18 +3,18 @@ return [
 
     'components' =>
     [
-        'importCsvContent' => [
-            'class'     => 'skeeks\cms\importCsvContent\ImportCsvContentComponent',
+        'importCsv' => [
+            'class'     => 'skeeks\cms\importCsv\ImportCsvComponent',
         ],
 
         'i18n' => [
             'translations' =>
             [
-                'skeeks/importCsvContent' => [
+                'skeeks/importCsv' => [
                     'class'             => 'yii\i18n\PhpMessageSource',
                     'basePath'          => '@skeeks/cms/importCsvContent/messages',
                     'fileMap' => [
-                        'skeeks/importCsvContent' => 'main.php',
+                        'skeeks/importCsv' => 'main.php',
                     ],
                 ]
             ]
@@ -23,8 +23,8 @@ return [
 
     'modules' =>
     [
-        'importCsvContent' => [
-            'class'         => 'skeeks\cms\importCsvContent\ImportCsvContentModule',
+        'importCsv' => [
+            'class'         => 'skeeks\cms\importCsvContent\ImportCsvModule',
         ]
     ]
 ];
