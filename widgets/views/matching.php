@@ -35,7 +35,7 @@ CSS
                 <? endforeach; ?>
             </tr>
         </thead>
-        <? foreach ($widget->model->getCsvColumnsData(0, 5) as $key => $row) : ?>
+        <? foreach ($widget->model->getCsvColumnsData(0, 3) as $key => $row) : ?>
             <?
                 if ($key == 0)
                 {
@@ -56,7 +56,7 @@ CSS
             </tr>
         <? endforeach; ?>
 
-        <? if ($widget->model->csvTotalRows > 5) : ?>
+        <? if ($widget->model->csvTotalRows > 3) : ?>
             <tr>
                 <td colspan="<?= count($firstRow); ?>">
                     Всего строк в файле: <b><?= $widget->model->csvTotalRows; ?>...</b>

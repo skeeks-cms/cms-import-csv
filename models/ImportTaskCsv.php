@@ -124,4 +124,5 @@ class ImportTaskCsv extends \skeeks\cms\models\Core
     {
         return file_exists($this->rootFilePath);
     }
+
 }

@@ -84,6 +84,8 @@ JS
     <?= \skeeks\cms\modules\admin\widgets\BlockTitleWidget::widget(['content' => 'Настройки импорта']); ?>
     <?= $handler->renderConfigForm($form); ?>
 
+
+
     <?= \skeeks\cms\modules\admin\widgets\BlockTitleWidget::widget(['content' => 'Сохранение задания']); ?>
 
     <?= $form->field($model, 'name'); ?>
@@ -102,4 +104,10 @@ JS
 
 
 <?= $form->buttonsStandart($model, ['save', 'close']); ?>
+<hr />
+<?= \skeeks\cms\importCsv\widgets\ImportCsvWidget::widget([
+    'modelTask' => $model
+]); ?>
+<br /><br />
+
 <?php ActiveForm::end(); ?>
