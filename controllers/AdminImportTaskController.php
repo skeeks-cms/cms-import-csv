@@ -26,7 +26,7 @@ class AdminImportTaskController extends AdminModelEditorController
 
     public function init()
     {
-        $this->name                 = \Yii::t('skeeks/importCsv', 'Import');
+        $this->name                 = \Yii::t('skeeks/importCsv', 'Tasks on imports');
         $this->modelShowAttribute   = "id";
         $this->modelClassName       = ImportTaskCsv::className();
     }
@@ -73,9 +73,12 @@ class AdminImportTaskController extends AdminModelEditorController
         {
             if (!\Yii::$app->request->post($this->notSubmitParam))
             {
+                $model->component_settings = $handler->toArray();
                 if ($model->load(\Yii::$app->request->post()) && $handler->load(\Yii::$app->request->post())
                     && $model->validate() && $handler->validate())
                 {
+                    $model->save();
+
                     \Yii::$app->getSession()->setFlash('success', \Yii::t('app','Saved'));
 
                     return $this->redirect(
@@ -122,9 +125,13 @@ class AdminImportTaskController extends AdminModelEditorController
             {
                 if ($rr->isRequestPjaxPost())
                 {
+                    $model->component_settings = $handler->toArray();
+
                     if ($model->load(\Yii::$app->request->post()) && $handler->load(\Yii::$app->request->post())
                         && $model->validate() && $handler->validate())
                     {
+                        $model->save();
+
                         \Yii::$app->getSession()->setFlash('success', \Yii::t('app','Saved'));
 
                         if (\Yii::$app->request->post('submit-btn') == 'apply')
@@ -132,8 +139,8 @@ class AdminImportTaskController extends AdminModelEditorController
 
                         } else
                         {
-                            return $this->controller->redirect(
-                                $this->controller->indexUrl
+                            return $this->redirect(
+                                $this->indexUrl
                             );
                         }
 

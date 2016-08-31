@@ -15,6 +15,7 @@ use yii\widgets\ActiveForm;
 /**
  * @property string $csvDelimetr
  * @property array $csvColumns
+ * @property int $csvTotalRows
  *
  * Class CsvHandler
  *
@@ -30,6 +31,9 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
     const CSV_DELIMETR_TAB = 'TAB';                 //табуляция
     const CSV_DELIMETR_SPS = 'SPS';                 //пробел
     const CSV_DELIMETR_OTHER = 'OTHER';             //другой
+
+    const CSV_CHARSET_UTF8           = 'UTF-8';             //другой
+    const CSV_CHARSET_WINDOWS1251    = 'windows-1251';             //другой
 
     /**
      * @var string
@@ -49,7 +53,26 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
     /**
      * @var string
      */
-    public $csv_delimetr_other = "";
+    public $csv_source_charset = self::CSV_CHARSET_UTF8;
+
+    /**
+     * @var string
+     */
+    public $csv_delimetr_other = ";";
+
+    public $csv_start_row = 1;
+    public $csv_end_row = '';
+
+    /**
+     * Соответствие полей
+     * @var array
+     */
+    public $matching = [];
+
+    public function getAvailableFields()
+    {
+        return ['' => ' - '];
+    }
 
 
     /**
@@ -67,11 +90,27 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
      */
     public $taskModel = null;
 
+    /**
+     * Доступные кодировки
+     * @return array
+     */
+    static public function getCsvCharsets()
+    {
+        return [
+            self::CSV_CHARSET_UTF8 => self::CSV_CHARSET_UTF8,
+            self::CSV_CHARSET_WINDOWS1251    => self::CSV_CHARSET_WINDOWS1251,
+        ];
+    }
+
+    /**
+     * Типы
+     * @return array
+     */
     static public function getCsvTypes()
     {
         return [
-            self::CSV_TYPE_DELIMETR => 'с разделителями - поля разделяются специальным символом',
-            self::CSV_TYPE_FIXED    => 'фиксированная ширина полей',
+            self::CSV_TYPE_DELIMETR => 'С разделителями - поля разделяются специальным символом',
+            self::CSV_TYPE_FIXED    => 'Фиксированная ширина полей',
         ];
     }
 
@@ -81,11 +120,11 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
     static public function getCsvDelimetrTypes()
     {
         return [
-            self::CSV_DELIMETR_TZP          => 'точка с запятой',
-            self::CSV_DELIMETR_ZPT          => 'запятая',
-            self::CSV_DELIMETR_TAB          => 'табуляция',
-            self::CSV_DELIMETR_SPS          => 'пробел',
-            self::CSV_DELIMETR_OTHER        => 'другой',
+            self::CSV_DELIMETR_TZP          => 'Точка с запятой',
+            self::CSV_DELIMETR_ZPT          => 'Запятая',
+            self::CSV_DELIMETR_TAB          => 'Табуляция',
+            self::CSV_DELIMETR_SPS          => 'Пробел',
+            self::CSV_DELIMETR_OTHER        => 'Другой',
         ];
     }
 
@@ -125,30 +164,35 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
             ['csv_delimetr_type' , 'default', 'value' => self::CSV_DELIMETR_TZP],
             ['csv_delimetr_type' , 'required'],
             ['csv_delimetr_type' , 'string'],
+
+            ['csv_source_charset' , 'string'],
+
+            ['csv_start_row' , 'integer'],
+            ['csv_end_row' , 'integer'],
+
+            ['matching' , 'safe'],
+
+            ['csv_delimetr_other' , 'string'],
+            ['csv_delimetr_other' , 'required', 'when' => function(self $model)
+            {
+                return $model->csv_delimetr_type == self::CSV_DELIMETR_OTHER;
+            }],
         ];
     }
 
     public function attributeLabels()
     {
         return [
-            'csv_type'          => \Yii::t('skeeks/importCsvContent', 'CSV type'),
+            'csv_type'                      => \Yii::t('skeeks/importCsv', 'CSV type'),
+            'csv_delimetr_type'             => \Yii::t('skeeks/importCsv', 'CSV type separator'),
+            'csv_delimetr_other'            => \Yii::t('skeeks/importCsv', 'Another separator'),
+            'csv_source_charset'            => \Yii::t('skeeks/importCsv', 'Encoding the source file'),
+            'matching'                      => \Yii::t('skeeks/importCsv', 'Preview content and configuration compliance'),
+            'csv_start_row'                 => \Yii::t('skeeks/importCsv', 'Start import from line'),
+            'csv_end_row'                   => \Yii::t('skeeks/importCsv', 'Finish the import on the line'),
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getCsvColumns()
-    {
-        $handle = fopen($this->taskModel->rootFilePath, "r");
-
-        while (($data = fgetcsv($handle, 0, $this->csvDelimetr)) !== FALSE)
-        {
-            return $data;
-        }
-
-        return [];
-    }
     /**
      * @return array
      */
@@ -164,6 +208,18 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
         {
             if ($counter >= $startRow && $counter <= $endRow)
             {
+                if (\Yii::$app->charset != $this->csv_source_charset)
+                {
+                    $encodedData = [];
+                    foreach ($data as $row)
+                    {
+                        $row = iconv($this->csv_source_charset, \Yii::$app->charset, $row);
+                        $encodedData[] = $row;
+                    }
+
+                    $data = $encodedData;
+                }
+
                 $result[] = $data;
             }
 
@@ -179,11 +235,42 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
     }
 
     /**
+     * @return int
+     */
+    public function getCsvTotalRows()
+    {
+        $counter = 0;
+
+        $handle = fopen($this->taskModel->rootFilePath, "r");
+
+        while (($data = fgetcsv($handle, 0, $this->csvDelimetr)) !== FALSE)
+        {
+            $counter++;
+        }
+
+        return $counter;
+    }
+    /**
      * @param ActiveForm $form
      */
     public function renderConfigForm(ActiveForm $form)
     {
-        echo $form->field($this, 'csv_type')->radioList(static::getCsvTypes());
-        echo $form->field($this, 'csv_delimetr_type')->radioList(static::getCsvDelimetrTypes());
+        echo $form->field($this, 'csv_type')->label(false)->radioList(static::getCsvTypes(), ['data-form-reload' => 'true']);
+
+        if ($this->csv_type == static::CSV_TYPE_DELIMETR)
+        {
+            echo $form->field($this, 'csv_delimetr_type')->label(false)->radioList(static::getCsvDelimetrTypes(), ['data-form-reload' => 'true']);
+        }
+
+        echo $form->field($this, 'csv_source_charset')->listBox(static::getCsvCharsets(), ['data-form-reload' => 'true', 'size' => 1]);
+
+        if ($this->csv_delimetr_type == static::CSV_DELIMETR_OTHER)
+        {
+            echo $form->field($this, 'csv_delimetr_other')->textInput(['size' => 5]);
+        }
+
+        echo $form->field($this, 'csv_start_row');
+        echo $form->field($this, 'csv_end_row');
+
     }
 }

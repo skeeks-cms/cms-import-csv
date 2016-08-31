@@ -30,14 +30,16 @@ use skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab as ActiveForm;
         {
             var self = this;
 
+            $("[data-form-reload=true]").on('change', function()
+            {
+                self.update();
+            });
+
             $("#importtaskcsv-file_path").on('change', function()
             {
                 self.update();
             });
-            $("#importtaskcsv-component").on('change', function()
-            {
-                self.update();
-            });
+
         },
 
         update: function()
@@ -71,10 +73,13 @@ JS
 
     <?= $form->field($model, 'component')->listBox(array_merge(['' => ' - '], \yii\helpers\ArrayHelper::map(
         \Yii::$app->importCsv->handlers, 'id', 'name'
-    )), ['size' => 1]); ?>
+    )), [
+    'size' => 1,
+    'data-form-reload' => 'true'
+]); ?>
 
 
-<? if ($handler && $model->file_path) : ?>
+<? if ($handler && $model->isFileExist) : ?>
 
     <?= \skeeks\cms\modules\admin\widgets\BlockTitleWidget::widget(['content' => 'Настройки импорта']); ?>
     <?= $handler->renderConfigForm($form); ?>
@@ -84,6 +89,17 @@ JS
     <?= $form->field($model, 'name'); ?>
     <?= $form->field($model, 'description')->textarea(['rows' => 5]); ?>
 <? endif; ?>
+
+<? if (!$model->isFileExist && $model->file_path) : ?>
+    <? \yii\bootstrap\Alert::begin([
+        'options' => [
+            'class' => 'alert-danger'
+        ]
+    ]); ?>
+        <?= \Yii::t('skeeks/importCsv', 'A csv file path is set incorrectly or the file does not exist in the specified path'); ?>
+    <? \yii\bootstrap\Alert::end(); ?>
+<? endif; ?>
+
 
 <?= $form->buttonsStandart($model, ['save', 'close']); ?>
 <?php ActiveForm::end(); ?>

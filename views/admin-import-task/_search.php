@@ -33,6 +33,7 @@ if ($filter->id)
     'action' => '/' . \Yii::$app->request->pathInfo,
 ]); ?>
 
-    <?= $form->field($filter, 'id')->setVisible()->label('ID'); ?>
+    <?= $form->field($searchModel, 'name')->setVisible(); ?>
+    <?= $form->field($filter, 'id')->label('ID'); ?>
 
 <? $form::end(); ?>

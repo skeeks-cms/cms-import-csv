@@ -2,12 +2,13 @@
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  * @link http://skeeks.com/
- * @copyright 2010 SkeekS (ÑêèêÑ)
- * @date 30.08.2016
+ * @copyright 2010 SkeekS (Ð¡ÐºÐ¸ÐºÐ¡)
+ * @date 31.08.2016
  */
 namespace skeeks\cms\importCsv\models;
 
 use skeeks\cms\importCsv\handlers\CsvHandler;
+use skeeks\cms\models\behaviors\Serialize;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -27,6 +28,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property CsvHandler $handler
  * @property string $rootFilePath
+ * @property boolean $isFileExist
  */
 class ImportTaskCsv extends \skeeks\cms\models\Core
 {
@@ -38,6 +40,17 @@ class ImportTaskCsv extends \skeeks\cms\models\Core
         return '{{%import_task_csv}}';
     }
 
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            Serialize::className() =>
+            [
+                'class' => Serialize::className(),
+                'fields' => ['component_settings']
+            ]
+        ]);
+    }
+
     /**
      * @inheritdoc
      */
@@ -47,7 +60,8 @@ class ImportTaskCsv extends \skeeks\cms\models\Core
             [['created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['file_path'], 'required'],
             [['component'], 'required'],
-            [['description', 'component_settings'], 'string'],
+            [['component_settings'], 'safe'],
+            [['description'], 'string'],
             [['file_path', 'name', 'component'], 'string', 'max' => 255],
         ]);
     }
@@ -61,7 +75,7 @@ class ImportTaskCsv extends \skeeks\cms\models\Core
             'id' => Yii::t('skeeks/importCsv', 'ID'),
             'file_path' => Yii::t('skeeks/importCsv', 'The path to the import file'),
             'name' => Yii::t('skeeks/importCsv', 'Name'),
-            'description' => Yii::t('skeeks/importCsv', 'description'),
+            'description' => Yii::t('skeeks/importCsv', 'Description'),
             'component' => Yii::t('skeeks/importCsv', 'Component'),
             'component_settings' => Yii::t('skeeks/importCsv', 'Component Settings'),
         ]);
@@ -101,5 +115,13 @@ class ImportTaskCsv extends \skeeks\cms\models\Core
     public function getRootFilePath()
     {
         return \Yii::getAlias('@frontend/web' . $this->file_path);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsFileExist()
+    {
+        return file_exists($this->rootFilePath);
     }
 }
