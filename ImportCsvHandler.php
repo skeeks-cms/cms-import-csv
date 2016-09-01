@@ -1,3 +1,4 @@
+
 <?php
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
@@ -5,10 +6,12 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 29.08.2016
  */
-namespace skeeks\cms\importCsv\handlers;
+namespace skeeks\cms\importCsv;
 
 use skeeks\cms\base\ConfigFormInterface;
+use skeeks\cms\import\ImportHandler;
 use skeeks\cms\importCsv\models\ImportTaskCsv;
+use skeeks\cms\modules\admin\widgets\formInputs\OneImage;
 use yii\base\Model;
 use yii\widgets\ActiveForm;
 
@@ -25,7 +28,7 @@ use yii\widgets\ActiveForm;
  *
  * @package skeeks\cms\importCsv\handlers
  */
-abstract class CsvHandler extends Model implements ConfigFormInterface
+abstract class ImportCsvHandler extends ImportHandler
 {
     const CSV_TYPE_FIXED    = 'fixed';          //фиксированная ширина полей
     const CSV_TYPE_DELIMETR = 'delimetr';       //с разделителями - поля разделяются специальным символом
@@ -58,6 +61,11 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
      * @var string
      */
     public $csv_source_charset = self::CSV_CHARSET_UTF8;
+
+    /**
+     * @var string
+     */
+    public $file_path = '';
 
     /**
      * @var string
@@ -162,6 +170,9 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
     public function rules()
     {
         return [
+            ['file_path' , 'required'],
+            ['file_path' , 'string'],
+
             ['csv_type' , 'required'],
             ['csv_type' , 'string'],
             ['csv_type' , 'default', 'value' => self::CSV_TYPE_DELIMETR],
@@ -199,6 +210,7 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
             'csv_start_row'                 => \Yii::t('skeeks/importCsv', 'Start import from line'),
             'csv_end_row'                   => \Yii::t('skeeks/importCsv', 'Finish the import on the line'),
             'step'                          => \Yii::t('skeeks/importCsv', 'Import step'),
+            'file_path'                     => \Yii::t('skeeks/importCsv', 'The path to the file import CSV'),
         ];
     }
 
@@ -309,6 +321,10 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
      */
     public function renderConfigForm(ActiveForm $form)
     {
+        echo $form->field($this, 'file_path')->widget([
+            OneImage::className()
+        ]);
+
         echo $form->field($this, 'csv_type')->label(false)->radioList(static::getCsvTypes(), ['data-form-reload' => 'true']);
 
         if ($this->csv_type == static::CSV_TYPE_DELIMETR)
@@ -330,5 +346,13 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
         echo "</div><div class='col-md-3'>";
             echo $form->field($this, 'step');
         echo "</div></div>";
+    }
+
+    /**
+     * @param ActiveForm $form
+     */
+    public function renderWidget(ActiveForm $form)
+    {
+        echo 'Not found widget';
     }
 }

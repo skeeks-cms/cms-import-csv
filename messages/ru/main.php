@@ -1,18 +1,13 @@
 <?php
 return [
-    'Export / Import' => 'Экспорт / Импорт',
-    'Import' => 'Импорт',
+
     'Import CSV' => 'Импорт CSV',
     'The path to the file import CSV' => 'Путь к файлу импорта CSV',
     'CSV type separator' => 'Вид разделителя CSV',
     'Another separator' => 'Другой разделитель',
     'Encoding the source file' => 'Кодировка исходного файла',
     'The path to the import file' => 'Путь к файлу импорта',
-    'Component' => 'Обработчик',
-    'Name' => 'Название',
     'Import step' => 'Шаг',
-    'Description' => 'Описание',
-    'Tasks on imports' => 'Задачи по импорту',
     'Start import from line' => 'Начать импорт со строки',
     'Finish the import on the line' => 'Закончить импорт на строке',
     'Preview content and configuration compliance' => 'Предпросмотр содержимого и настройка соответствия',

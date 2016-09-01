@@ -3,10 +3,6 @@ return [
 
     'components' =>
     [
-        'importCsv' => [
-            'class'     => 'skeeks\cms\importCsv\ImportCsvComponent',
-        ],
-
         'i18n' => [
             'translations' =>
             [
