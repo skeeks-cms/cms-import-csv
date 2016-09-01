@@ -7,6 +7,7 @@
  */
 namespace skeeks\cms\importCsv\controllers;
 use skeeks\cms\helpers\RequestResponse;
+use skeeks\cms\import\models\ImportTask;
 use skeeks\cms\importCsv\models\ImportTaskCsv;
 use skeeks\cms\importCsvContent\models\ImportTaskModel;
 use skeeks\cms\modules\admin\actions\modelEditor\AdminModelEditorAction;
@@ -26,7 +27,7 @@ class AdminImportTaskController extends AdminController
     {
         $rr = new RequestResponse();
 
-        $model = new ImportTaskCsv();
+        $model = new ImportTask();
         $model->loadDefaultValues();
 
         if ($post = \Yii::$app->request->post())
@@ -83,7 +84,7 @@ class AdminImportTaskController extends AdminController
         $taskData = [];
         parse_str(\Yii::$app->request->post('task'), $taskData);
 
-        $model = new ImportTaskCsv();
+        $model = new ImportTask();
         $model->loadDefaultValues();
         $model->load($taskData);
 

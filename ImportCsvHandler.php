@@ -1,4 +1,3 @@
-
 <?php
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
@@ -11,6 +10,7 @@ namespace skeeks\cms\importCsv;
 use skeeks\cms\base\ConfigFormInterface;
 use skeeks\cms\import\ImportHandler;
 use skeeks\cms\importCsv\models\ImportTaskCsv;
+use skeeks\cms\importCsv\widgets\ImportCsvWidget;
 use skeeks\cms\modules\admin\widgets\formInputs\OneImage;
 use yii\base\Model;
 use yii\widgets\ActiveForm;
@@ -23,6 +23,8 @@ use yii\widgets\ActiveForm;
  * @property int $endRow
  * @property int $totalTask
  * @property int $totalSteps
+ *
+ * @property string $rootFilePath
  *
  * Class CsvHandler
  *
@@ -76,11 +78,7 @@ abstract class ImportCsvHandler extends ImportHandler
     public $csv_end_row     = '';
     public $step            = 20;
 
-    /**
-     * Соответствие полей
-     * @var array
-     */
-    public $matching = [];
+
 
     public function getAvailableFields()
     {
@@ -189,8 +187,6 @@ abstract class ImportCsvHandler extends ImportHandler
             ['step' , 'integer'],
             ['step' , 'required'],
 
-            ['matching' , 'safe'],
-
             ['csv_delimetr_other' , 'string'],
             ['csv_delimetr_other' , 'required', 'when' => function(self $model)
             {
@@ -206,7 +202,6 @@ abstract class ImportCsvHandler extends ImportHandler
             'csv_delimetr_type'             => \Yii::t('skeeks/importCsv', 'CSV type separator'),
             'csv_delimetr_other'            => \Yii::t('skeeks/importCsv', 'Another separator'),
             'csv_source_charset'            => \Yii::t('skeeks/importCsv', 'Encoding the source file'),
-            'matching'                      => \Yii::t('skeeks/importCsv', 'Preview content and configuration compliance'),
             'csv_start_row'                 => \Yii::t('skeeks/importCsv', 'Start import from line'),
             'csv_end_row'                   => \Yii::t('skeeks/importCsv', 'Finish the import on the line'),
             'step'                          => \Yii::t('skeeks/importCsv', 'Import step'),
@@ -221,7 +216,7 @@ abstract class ImportCsvHandler extends ImportHandler
     {
         $result = [];
 
-        $handle = fopen($this->taskModel->rootFilePath, "r");
+        $handle = fopen($this->rootFilePath, "r");
 
         $counter = 0;
         $realCounter = $startRow;
@@ -264,7 +259,7 @@ abstract class ImportCsvHandler extends ImportHandler
     {
         $counter = 0;
 
-        $handle = fopen($this->taskModel->rootFilePath, "r");
+        $handle = fopen($this->rootFilePath, "r");
 
         while (($data = fgetcsv($handle, 0, $this->csvDelimetr)) !== FALSE)
         {
@@ -317,13 +312,28 @@ abstract class ImportCsvHandler extends ImportHandler
     }
 
     /**
+     * @return bool|string
+     */
+    public function getRootFilePath()
+    {
+        return \Yii::getAlias('@frontend/web' . $this->file_path);
+    }
+
+    /**
      * @param ActiveForm $form
      */
     public function renderConfigForm(ActiveForm $form)
     {
-        echo $form->field($this, 'file_path')->widget([
-            OneImage::className()
-        ]);
+        echo $form->field($this, 'file_path')->widget(
+            OneImage::className(),
+            [
+                'showPreview'       => false,
+                'options' =>
+                [
+                    'data-form-reload'  => 'true'
+                ]
+            ]
+        );
 
         echo $form->field($this, 'csv_type')->label(false)->radioList(static::getCsvTypes(), ['data-form-reload' => 'true']);
 
@@ -353,6 +363,8 @@ abstract class ImportCsvHandler extends ImportHandler
      */
     public function renderWidget(ActiveForm $form)
     {
-        echo 'Not found widget';
+        echo ImportCsvWidget::widget([
+            'activeForm' => $form
+        ]);
     }
 }

@@ -10,6 +10,5 @@ return [
     'Import step' => 'Шаг',
     'Start import from line' => 'Начать импорт со строки',
     'Finish the import on the line' => 'Закончить импорт на строке',
-    'Preview content and configuration compliance' => 'Предпросмотр содержимого и настройка соответствия',
     'A csv file path is set incorrectly or the file does not exist in the specified path' => 'Путь к csv файлу задан некорректно или файл не существует по указанному пути',
 ];

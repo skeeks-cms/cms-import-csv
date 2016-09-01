@@ -30,6 +30,7 @@ class MatchingInput extends InputWidget
         parent::init();
 
         Html::addCssClass($this->options, 'sx-matching-widget');
+        Html::removeCssClass($this->options, ['form-control']);
     }
 
     public function run()

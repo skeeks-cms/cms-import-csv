@@ -13,7 +13,7 @@ $widget = $this->context;
 $this->registerCss(<<<CSS
 .sx-matching-widget
 {
-    overflow: auto;
+    overflow-y: auto;
 }
 CSS
 );
