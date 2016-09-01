@@ -1,0 +1,9 @@
+table tr.sx-success td
+{
+    background: rgba(0, 128, 0, 0.14);
+}
+
+table tr.sx-error td
+{
+    background: red;
+}

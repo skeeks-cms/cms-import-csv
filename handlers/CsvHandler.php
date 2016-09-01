@@ -16,6 +16,10 @@ use yii\widgets\ActiveForm;
  * @property string $csvDelimetr
  * @property array $csvColumns
  * @property int $csvTotalRows
+ * @property int $startRow
+ * @property int $endRow
+ * @property int $totalTask
+ * @property int $totalSteps
  *
  * Class CsvHandler
  *
@@ -60,8 +64,9 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
      */
     public $csv_delimetr_other = ";";
 
-    public $csv_start_row = 1;
-    public $csv_end_row = '';
+    public $csv_start_row   = 1;
+    public $csv_end_row     = '';
+    public $step            = 20;
 
     /**
      * Соответствие полей
@@ -170,6 +175,9 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
             ['csv_start_row' , 'integer'],
             ['csv_end_row' , 'integer'],
 
+            ['step' , 'integer'],
+            ['step' , 'required'],
+
             ['matching' , 'safe'],
 
             ['csv_delimetr_other' , 'string'],
@@ -190,6 +198,7 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
             'matching'                      => \Yii::t('skeeks/importCsv', 'Preview content and configuration compliance'),
             'csv_start_row'                 => \Yii::t('skeeks/importCsv', 'Start import from line'),
             'csv_end_row'                   => \Yii::t('skeeks/importCsv', 'Finish the import on the line'),
+            'step'                          => \Yii::t('skeeks/importCsv', 'Import step'),
         ];
     }
 
@@ -203,6 +212,7 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
         $handle = fopen($this->taskModel->rootFilePath, "r");
 
         $counter = 0;
+        $realCounter = $startRow;
 
         while (($data = fgetcsv($handle, 0, $this->csvDelimetr)) !== FALSE)
         {
@@ -220,7 +230,8 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
                     $data = $encodedData;
                 }
 
-                $result[] = $data;
+                $result[$realCounter] = $data;
+                $realCounter ++;
             }
 
             if ($counter > $endRow)
@@ -250,6 +261,49 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
 
         return $counter;
     }
+
+    /**
+     * @return int
+     */
+    public function getStartRow()
+    {
+        if ($this->csv_start_row)
+        {
+            return (int) $this->csv_start_row;
+        }
+
+        return 1;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndRow()
+    {
+        if ($this->csv_end_row)
+        {
+            return (int) $this->csv_end_row;
+        }
+
+        return $this->csvTotalRows;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalTask()
+    {
+        return $this->endRow - $this->startRow;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalSteps()
+    {
+        return (int) round($this->totalTask / (int) $this->step) + 1;
+    }
+
     /**
      * @param ActiveForm $form
      */
@@ -269,8 +323,12 @@ abstract class CsvHandler extends Model implements ConfigFormInterface
             echo $form->field($this, 'csv_delimetr_other')->textInput(['size' => 5]);
         }
 
-        echo $form->field($this, 'csv_start_row');
-        echo $form->field($this, 'csv_end_row');
-
+        echo "<div class='row'><div class='col-md-3'>";
+            echo $form->field($this, 'csv_start_row');
+        echo "</div><div class='col-md-3'>";
+            echo $form->field($this, 'csv_end_row');
+        echo "</div><div class='col-md-3'>";
+            echo $form->field($this, 'step');
+        echo "</div></div>";
     }
 }

@@ -106,7 +106,7 @@ JS
 <?= $form->buttonsStandart($model, ['save', 'close']); ?>
 <hr />
 <?= \skeeks\cms\importCsv\widgets\ImportCsvWidget::widget([
-    'modelTask' => $model
+    'activeForm' => $form
 ]); ?>
 <br /><br />
 

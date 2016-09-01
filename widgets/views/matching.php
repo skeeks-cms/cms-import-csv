@@ -58,7 +58,7 @@ CSS
 
         <? if ($widget->model->csvTotalRows > 3) : ?>
             <tr>
-                <td colspan="<?= count($firstRow); ?>">
+                <td colspan="<?= count($firstRow) + 1; ?>">
                     Всего строк в файле: <b><?= $widget->model->csvTotalRows; ?>...</b>
                 </td>
             </tr>

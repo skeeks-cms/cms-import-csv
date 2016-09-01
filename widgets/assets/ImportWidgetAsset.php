@@ -21,6 +21,10 @@ class ImportWidgetAsset extends AssetBundle
         'import.js'
     ];
 
+    public $css = [
+        'import.css'
+    ];
+
     public $depends = [
         '\skeeks\cms\assets\JsTaskManagerAsset'
     ];

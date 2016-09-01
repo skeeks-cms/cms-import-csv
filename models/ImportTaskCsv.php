@@ -8,6 +8,7 @@
 namespace skeeks\cms\importCsv\models;
 
 use skeeks\cms\importCsv\handlers\CsvHandler;
+use skeeks\cms\importCsv\helpers\CsvImportRowResult;
 use skeeks\cms\models\behaviors\Serialize;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -123,6 +124,18 @@ class ImportTaskCsv extends \skeeks\cms\models\Core
     public function getIsFileExist()
     {
         return file_exists($this->rootFilePath);
+    }
+
+
+    /**
+     * @param $number
+     * @param $data
+     *
+     * @return CsvImportRowResult
+     */
+    public function import($number, $data)
+    {
+        return new CsvImportRowResult();
     }
 
 }

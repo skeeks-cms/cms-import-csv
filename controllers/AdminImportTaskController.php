@@ -158,6 +158,115 @@ class AdminImportTaskController extends AdminModelEditorController
     }
 
 
+    public function actionLoadTask()
+    {
+        $rr = new RequestResponse();
+
+        $model = new ImportTaskCsv();
+        $model->loadDefaultValues();
+
+        if ($post = \Yii::$app->request->post())
+        {
+            $model->load($post);
+        }
+
+        $handler = $model->handler;
+        if ($handler)
+        {
+            if ($post = \Yii::$app->request->post())
+            {
+                $handler->load($post);
+            }
+        } else
+        {
+            $rr->success = false;
+            $rr->message = 'Компонент не настроен';
+            return $rr;
+        }
+
+        $model->validate();
+        $handler->validate();
+
+        if (!$model->errors && !$handler->errors)
+        {
+            $rr->success = true;
+
+            $rr->data = [
+                'step'          => (int) $handler->step,
+                'total'         => (int) $handler->csvTotalRows,
+                'totalTask'     => (int) $handler->totalTask,
+                'totalSteps'    => (int) $handler->totalSteps,
+                'start'         => (int) $handler->startRow,
+                'end'           => (int) $handler->endRow,
+            ];
+
+        } else
+        {
+            $rr->success = false;
+            $rr->message = 'Проверьте правильность указанных данных';
+        }
+
+        return $rr;
+    }
+
+    public function actionImportStep()
+    {
+        $rr = new RequestResponse();
+
+        $start  = \Yii::$app->request->post('start');
+        $end    = \Yii::$app->request->post('end');
+
+        $taskData = [];
+        parse_str(\Yii::$app->request->post('task'), $taskData);
+
+        $model = new ImportTaskCsv();
+        $model->loadDefaultValues();
+        $model->load($taskData);
+
+        $handler = $model->handler;
+        $handler->load($taskData);
+
+        $model->validate();
+        $handler->validate();
+
+        if (!$model->errors && !$handler->errors)
+        {
+            $rows = $model->handler->getCsvColumnsData($start, $end);
+            $results = [];
+            $totalSuccess = 0;
+            $totalErrors = 0;
+
+            foreach ($rows as $number => $data)
+            {
+                $result = $model->handler->import($number, $data);
+                if ($result->success)
+                {
+                    $totalSuccess++;
+                } else
+                {
+                    $totalErrors++;
+                }
+                $results[$number] = $result;
+            }
+
+            $rr->success    = true;
+
+            $rr->data       = [
+                'rows'          => $results,
+                'totalSuccess'  => $totalSuccess,
+                'totalErrors'   => $totalErrors,
+            ];
+
+            $rr->message    = 'Задание выполнено';
+        } else
+        {
+            $rr->success = false;
+            $rr->message = 'Проверьте правильность указанных данных';
+        }
+
+
+        return $rr;
+    }
 
     /*public function actionIndex()
     {

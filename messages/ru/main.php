@@ -10,6 +10,7 @@ return [
     'The path to the import file' => 'Путь к файлу импорта',
     'Component' => 'Обработчик',
     'Name' => 'Название',
+    'Import step' => 'Шаг',
     'Description' => 'Описание',
     'Tasks on imports' => 'Задачи по импорту',
     'Start import from line' => 'Начать импорт со строки',

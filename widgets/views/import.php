@@ -35,6 +35,18 @@ CSS
         </div>
     </div>
 
+    <div class="sx-result-wrapper">
+        <table class="table table-bordered sx-table" style="background: white;">
+            <thead>
+                <tr>
+                    <th>Номер строки</th>
+                    <th>Сообщение</th>
+                    <th>Результат</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 <?= \yii\helpers\Html::endTag('div'); ?>
 
 <?

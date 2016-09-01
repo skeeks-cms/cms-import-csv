@@ -13,6 +13,7 @@ use skeeks\cms\importCsvContent\CsvContentHandler;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\widgets\InputWidget;
 
 /**
@@ -35,18 +36,24 @@ class ImportCsvWidget extends Widget
      */
     public $modelTask = null;
 
+    /**
+     * @var ActiveForm
+     */
+    public $activeForm = null;
+
     public function init()
     {
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
 
+
         $this->clientOptions = ArrayHelper::merge([
-            'backend' => \skeeks\cms\helpers\UrlHelper::construct(['/importCsv/admin-import-task/import'])->enableAdmin()->toString(),
-            'id' => $this->options['id'],
-            'task' => ArrayHelper::merge($this->modelTask->toArray(), [
-                'totalRows' => $this->modelTask->handler->csvTotalRows
-            ])
+            'backendStep'       => \skeeks\cms\helpers\UrlHelper::construct(['/importCsv/admin-import-task/import-step'])->enableAdmin()->toString(),
+            'backendLoadTask'   => \skeeks\cms\helpers\UrlHelper::construct(['/importCsv/admin-import-task/load-task'])->enableAdmin()->toString(),
+            'id'                => $this->options['id'],
+            'formId'            => $this->activeForm->id,
+            'delayQueque'       => 200,
         ], $this->clientOptions);
 
 
