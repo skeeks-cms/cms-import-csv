@@ -17,7 +17,7 @@
 		}
 	],
 	"require": {
-		"skeeks/cms-import": "*",
+		"skeeks/cms-import": "*"
 	},
     "autoload": {
         "psr-4": {
