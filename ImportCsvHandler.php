@@ -97,11 +97,6 @@ abstract class ImportCsvHandler extends ImportHandler
     public $description = '';
 
     /**
-     * @var ImportTaskCsv
-     */
-    public $taskModel = null;
-
-    /**
      * Доступные кодировки
      * @return array
      */
@@ -324,6 +319,14 @@ abstract class ImportCsvHandler extends ImportHandler
      */
     public function renderConfigForm(ActiveForm $form)
     {
+        $this->renderCsvConfigForm($form);
+    }
+
+    /**
+     * @param ActiveForm $form
+     */
+    public function renderCsvConfigForm(ActiveForm $form)
+    {
         echo $form->field($this, 'file_path')->widget(
             OneImage::className(),
             [
@@ -335,27 +338,39 @@ abstract class ImportCsvHandler extends ImportHandler
             ]
         );
 
-        echo $form->field($this, 'csv_type')->label(false)->radioList(static::getCsvTypes(), ['data-form-reload' => 'true']);
-
-        if ($this->csv_type == static::CSV_TYPE_DELIMETR)
+        if (!$this->rootFilePath || !file_exists($this->rootFilePath))
         {
-            echo $form->field($this, 'csv_delimetr_type')->label(false)->radioList(static::getCsvDelimetrTypes(), ['data-form-reload' => 'true']);
-        }
-
-        echo $form->field($this, 'csv_source_charset')->listBox(static::getCsvCharsets(), ['data-form-reload' => 'true', 'size' => 1]);
-
-        if ($this->csv_delimetr_type == static::CSV_DELIMETR_OTHER)
+            \yii\bootstrap\Alert::begin([
+                'options' => [
+                    'class' => 'alert-danger'
+                ]
+            ]);
+                echo \Yii::t('skeeks/import', 'A csv file path is set incorrectly or the file does not exist in the specified path');
+            \yii\bootstrap\Alert::end();
+        } else
         {
-            echo $form->field($this, 'csv_delimetr_other')->textInput(['size' => 5]);
-        }
+            echo $form->field($this, 'csv_type')->label(false)->radioList(static::getCsvTypes(), ['data-form-reload' => 'true']);
 
-        echo "<div class='row'><div class='col-md-3'>";
-            echo $form->field($this, 'csv_start_row');
-        echo "</div><div class='col-md-3'>";
-            echo $form->field($this, 'csv_end_row');
-        echo "</div><div class='col-md-3'>";
-            echo $form->field($this, 'step');
-        echo "</div></div>";
+            if ($this->csv_type == static::CSV_TYPE_DELIMETR)
+            {
+                echo $form->field($this, 'csv_delimetr_type')->label(false)->radioList(static::getCsvDelimetrTypes(), ['data-form-reload' => 'true']);
+            }
+
+            echo $form->field($this, 'csv_source_charset')->listBox(static::getCsvCharsets(), ['data-form-reload' => 'true', 'size' => 1]);
+
+            if ($this->csv_delimetr_type == static::CSV_DELIMETR_OTHER)
+            {
+                echo $form->field($this, 'csv_delimetr_other')->textInput(['size' => 5]);
+            }
+
+            echo "<div class='row'><div class='col-md-3'>";
+                echo $form->field($this, 'csv_start_row');
+            echo "</div><div class='col-md-3'>";
+                echo $form->field($this, 'csv_end_row');
+            echo "</div><div class='col-md-3'>";
+                echo $form->field($this, 'step');
+            echo "</div></div>";
+        }
     }
 
     /**

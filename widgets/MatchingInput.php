@@ -20,6 +20,8 @@ use yii\widgets\InputWidget;
  */
 class MatchingInput extends InputWidget
 {
+    public $columns = [];
+
     public function init()
     {
         if (!$this->model)

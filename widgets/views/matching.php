@@ -28,9 +28,9 @@ CSS
                 <th></th>
                 <? foreach($firstRow as $key => $value) : ?>
                     <th>
-                        <? $name = \yii\helpers\Html::getInputName($widget->model, 'matching'); ?>
-                        <? $selected = \yii\helpers\ArrayHelper::getValue((array) $widget->model->matching, $key); ?>
-                        <?= \yii\helpers\Html::listBox($name . "[{$key}]", $selected, $widget->model->getAvailableFields(), ['size' => 1, 'class' => 'form-control'])?>
+                        <? $name = \yii\helpers\Html::getInputName($widget->model, $widget->attribute); ?>
+                        <? $selected = \yii\helpers\ArrayHelper::getValue((array) $widget->model->{$widget->attribute}, $key); ?>
+                        <?= \yii\helpers\Html::listBox($name . "[{$key}]", $selected, $widget->columns, ['size' => 1, 'class' => 'form-control'])?>
                     </th>
                 <? endforeach; ?>
             </tr>
