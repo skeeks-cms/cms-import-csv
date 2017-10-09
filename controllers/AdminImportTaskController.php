@@ -96,14 +96,14 @@ class AdminImportTaskController extends AdminController
 
         if (!$model->errors && !$handler->errors)
         {
-            $rows = $model->handler->getCsvColumnsData($start, $end);
+            $rows = $handler->getCsvColumnsData($start, $end);
             $results = [];
             $totalSuccess = 0;
             $totalErrors = 0;
 
             foreach ($rows as $number => $data)
             {
-                $result = $model->handler->import($number, $data);
+                $result = $handler->import($number, $data);
                 if ($result->success)
                 {
                     $totalSuccess++;
