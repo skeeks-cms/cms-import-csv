@@ -15,6 +15,10 @@ $this->registerCss(<<<CSS
 {
     overflow-y: auto;
 }
+.sx-matching-widget th
+{
+    background: silver;
+}
 CSS
 );
 ?>
@@ -25,12 +29,35 @@ CSS
     <table class="table table-striped table-bordered sx-table" style="background: white;">
         <thead>
             <tr>
-                <th></th>
+                <th>Соответствие данных</th>
                 <? foreach($firstRow as $key => $value) : ?>
                     <th>
                         <? $name = \yii\helpers\Html::getInputName($widget->model, $widget->attribute); ?>
                         <? $selected = \yii\helpers\ArrayHelper::getValue((array) $widget->model->{$widget->attribute}, $key); ?>
-                        <?= \yii\helpers\Html::listBox($name . "[{$key}]", $selected, $widget->columns, ['size' => 1, 'class' => 'form-control'])?>
+                        <?/*= \yii\helpers\Html::listBox($name . "[{$key}]", $selected, $widget->columns, ['size' => 1, 'class' => 'form-control'])*/?>
+                        <?= \yii\helpers\Html::listBox($name . "[{$key}][code]", $selected['code'], $widget->columns, ['size' => 1, 'class' => 'form-control'])?>
+                    </th>
+                <? endforeach; ?>
+            </tr>
+            <tr>
+                <th>Уникальная колонка</th>
+                <? foreach($firstRow as $key => $value) : ?>
+                    <th>
+                        <? $name = \yii\helpers\Html::getInputName($widget->model, $widget->attribute); ?>
+                        <? $selected = \yii\helpers\ArrayHelper::getValue((array) $widget->model->{$widget->attribute}, $key); ?>
+                        <? $checked = \yii\helpers\ArrayHelper::getValue($selected, "unique"); ?>
+                        <?= \yii\helpers\Html::radio($name . "[{$key}][unique]", $checked)?>
+                    </th>
+                <? endforeach; ?>
+            </tr>
+            <tr>
+                <th>Перезатирать при обновлении?</th>
+                <? foreach($firstRow as $key => $value) : ?>
+                    <th>
+                        <? $name = \yii\helpers\Html::getInputName($widget->model, $widget->attribute); ?>
+                        <? $selected = \yii\helpers\ArrayHelper::getValue((array) $widget->model->{$widget->attribute}, $key); ?>
+                        <? $checked = \yii\helpers\ArrayHelper::getValue($selected, "is_update_rewrite"); ?>
+                        <?= \yii\helpers\Html::checkbox($name . "[{$key}][is_update_rewrite]", $checked)?>
                     </th>
                 <? endforeach; ?>
             </tr>

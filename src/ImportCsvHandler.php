@@ -13,6 +13,9 @@ use skeeks\cms\importCsv\models\ImportTaskCsv;
 use skeeks\cms\importCsv\widgets\ImportCsvWidget;
 use skeeks\cms\modules\admin\widgets\formInputs\OneImage;
 use yii\base\Model;
+use yii\helpers\FileHelper;
+use yii\helpers\Url;
+use yii\httpclient\Client;
 use yii\widgets\ActiveForm;
 
 /**
@@ -25,6 +28,7 @@ use yii\widgets\ActiveForm;
  * @property int $totalSteps
  *
  * @property string $rootFilePath
+ * @property boolean $isFileExists
  *
  * Class CsvHandler
  *
@@ -306,12 +310,50 @@ abstract class ImportCsvHandler extends ImportHandler
         return (int) round($this->totalTask / (int) $this->step) + 1;
     }
 
+    protected $_root_file_path = null;
+
     /**
      * @return bool|string
      */
     public function getRootFilePath()
     {
-        return \Yii::getAlias('@frontend/web' . $this->file_path);
+        if ($this->_root_file_path === null) {
+            if ($this->file_path && Url::isRelative($this->file_path)) {
+                $this->_root_file_path = \Yii::getAlias('@frontend/web' . $this->file_path);
+            } else {
+
+                $tmpFile = \Yii::getAlias('@runtime/import/' . md5($this->file_path) . '.csv');
+                //Если существует временный файл
+                if (file_exists($tmpFile)) {
+                    //Если временный файл создан менее 5 минут назад, то можно использовать этот файл
+                    if (time() - filectime($tmpFile) <= 60*60*5 ) {
+                        $this->_root_file_path = $tmpFile;
+                        return $tmpFile;
+                    }
+                }
+
+                //Если файл вообще существует и он еще не скачивался
+                if ($this->isFileExists) {
+                    $runtimeDir = \Yii::getAlias('@runtime/import/');
+                    FileHelper::createDirectory($runtimeDir);
+
+                    $client = new Client();
+                    $response = $client->createRequest()
+                        ->setUrl($this->file_path)
+                        ->send();
+
+                    if ($response->isOk) {
+                        $this->_root_file_path = $tmpFile;
+
+                        $fp = fopen($this->_root_file_path, "w"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту),мы создаем файл
+                        fwrite($fp, $response->content);
+                        fclose($fp);
+                    }
+                }
+            }
+        }
+
+        return $this->_root_file_path;
     }
 
     /**
@@ -320,6 +362,30 @@ abstract class ImportCsvHandler extends ImportHandler
     public function renderConfigForm(ActiveForm $form)
     {
         $this->renderCsvConfigForm($form);
+    }
+
+    public function getIsFileExists()
+    {
+        if (!$this->file_path) {
+            return false;
+        }
+
+        if (Url::isRelative($this->file_path)) {
+            if ($this->rootFilePath && file_exists($this->rootFilePath)) {
+                return true;
+            }
+        } else {
+            $client = new Client();
+            $response = $client->createRequest()
+                ->setUrl($this->file_path)
+                ->send();
+
+            if ($response->isOk) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -338,14 +404,14 @@ abstract class ImportCsvHandler extends ImportHandler
             ]
         );
 
-        if (!$this->rootFilePath || !file_exists($this->rootFilePath))
+        if ($this->file_path && !$this->isFileExists)
         {
             \yii\bootstrap\Alert::begin([
                 'options' => [
                     'class' => 'alert-danger'
                 ]
             ]);
-                echo \Yii::t('skeeks/import', 'A csv file path is set incorrectly or the file does not exist in the specified path');
+                echo \Yii::t('skeeks/import', 'Путь к файлу csv задан неверно или файл не существует по указанному пути');
             \yii\bootstrap\Alert::end();
         } else
         {
