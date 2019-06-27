@@ -4,7 +4,7 @@
 	"keywords": ["yii", "skeeks", "framework", "component", "seo"],
   	"homepage": "http://cms.skeeks.com/",
 	"type": "yii2-extension",
-	"license": "GPL-3.0+",
+	"license": "BSD-3-Clause",
 	"support": {
         "issues": "http://skeeks.com/",
         "wiki": "http://en.cms.skeeks.com/docs/",
@@ -17,17 +17,17 @@
 		}
 	],
 	"require": {
-		"skeeks/cms-import": "*"
+		"skeeks/cms-import": "^1.1"
 	},
     "autoload": {
         "psr-4": {
-            "skeeks\\cms\\importCsv\\": ""
+            "skeeks\\cms\\importCsv\\": "src/"
         }
     },
     "extra": {
         "config-plugin": {
-            "web": "config/main.php",
-            "console": "config/main-console.php"
+            "web": "src/config/web.php",
+            "console": "src/config/console.php"
         }
     }
 }
