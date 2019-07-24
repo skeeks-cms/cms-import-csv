@@ -35,7 +35,7 @@ CSS
                         <? $name = \yii\helpers\Html::getInputName($widget->model, $widget->attribute); ?>
                         <? $selected = \yii\helpers\ArrayHelper::getValue((array) $widget->model->{$widget->attribute}, $key); ?>
                         <?/*= \yii\helpers\Html::listBox($name . "[{$key}]", $selected, $widget->columns, ['size' => 1, 'class' => 'form-control'])*/?>
-                        <?= \yii\helpers\Html::listBox($name . "[{$key}][code]", $selected['code'], $widget->columns, ['size' => 1, 'class' => 'form-control'])?>
+                        <?= \yii\helpers\Html::listBox($name . "[{$key}][code]", @$selected['code'], $widget->columns, ['size' => 1, 'class' => 'form-control'])?>
                     </th>
                 <? endforeach; ?>
             </tr>
