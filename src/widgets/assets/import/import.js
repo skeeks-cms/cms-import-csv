@@ -99,7 +99,7 @@
                     'task'  : $('#' + self.get('formId')).serialize(),
                 });
 
-                new sx.classes.AjaxHandlerNoLoader(ajaxQuery);
+                /*new sx.classes.AjaxHandlerNoLoader(ajaxQuery);*/
 
                 ajaxQuery.onSuccess(function(e, data)
                 {
