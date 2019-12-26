@@ -19,6 +19,20 @@ $this->registerCss(<<<CSS
 {
     background: silver;
 }
+.sx-matching-table td, .sx-matching-table th {
+    padding: .25rem;
+    font-size: 11px;
+    white-space: nowrap;
+    max-width: 200px;
+    min-width: 50px;
+    overflow: hidden;
+}
+.sx-matching-table select {
+    height: 27px;
+    padding: 2px;
+}
+    
+
 CSS
 );
 ?>
@@ -26,7 +40,7 @@ CSS
     <? $all = $widget->model->getCsvColumnsData() ;?>
     <? $firstRow = $all[0] ;?>
 <?= \yii\helpers\Html::beginTag('div', $widget->options); ?>
-    <table class="table table-striped table-bordered sx-table" style="background: white;">
+    <table class="table table-striped table-bordered sx-table sx-matching-table" style="background: white;">
         <thead>
             <tr>
                 <th>Соответствие данных</th>
@@ -74,7 +88,9 @@ CSS
                     <b><?= $key; ?></b>
                 </td>
                 <? foreach($row as $value) : ?>
-                    <td>
+                    <td title="<?= \skeeks\cms\helpers\StringHelper::substr(
+                                \Yii::$app->formatter->format($value, 'text'), 0, 150
+                            ); ?>">
                         <?= \skeeks\cms\helpers\StringHelper::substr(
                             \Yii::$app->formatter->format($value, 'text'), 0, 150
                         ); ?>
@@ -100,7 +116,9 @@ CSS
                         <b><?= $from; ?></b>
                     </td>
                     <? foreach($row as $value) : ?>
-                        <td>
+                        <td title="<?= \skeeks\cms\helpers\StringHelper::substr(
+                                \Yii::$app->formatter->format($value, 'text'), 0, 150
+                            ); ?>">
                             <?= \skeeks\cms\helpers\StringHelper::substr(
                                 \Yii::$app->formatter->format($value, 'text'), 0, 150
                             ); ?>
