@@ -76,7 +76,7 @@ CSS
                 <? endforeach; ?>
             </tr>
         </thead>
-        <? foreach ($widget->model->getCsvColumnsData(0, 3) as $key => $row) : ?>
+        <? foreach ($widget->model->getCsvColumnsData(0, 15) as $key => $row) : ?>
             <?
                 if ($key == 0)
                 {
