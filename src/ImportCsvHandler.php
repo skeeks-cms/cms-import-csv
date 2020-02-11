@@ -393,13 +393,13 @@ abstract class ImportCsvHandler extends ImportHandler
         );
 
         if ($this->file_path && !$this->isFileExists) {
-            \yii\bootstrap\Alert::begin([
+            $widget = \yii\bootstrap\Alert::begin([
                 'options' => [
                     'class' => 'alert-danger',
                 ],
             ]);
             echo \Yii::t('skeeks/import', 'Путь к файлу csv задан неверно или файл не существует по указанному пути');
-            \yii\bootstrap\Alert::end();
+            $widget::end();
         } else {
             echo $form->field($this, 'csv_type')->label(false)->radioList(static::getCsvTypes(), ['data-form-reload' => 'true']);
 
