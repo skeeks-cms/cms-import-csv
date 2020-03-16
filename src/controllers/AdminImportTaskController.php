@@ -52,7 +52,7 @@ class AdminImportTaskController extends AdminController
         $model->validate();
         $handler->validate();
 
-        if (!$model->errors && !$handler->errors)
+        if (!$model->errors && !$handler->errors && $handler->beforeExecute())
         {
             $rr->success = true;
 
