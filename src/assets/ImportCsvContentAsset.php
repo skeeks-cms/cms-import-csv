@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
  *
  * @package skeeks\cms\importCsvContent\assets
  */
-class ImportCsvAsset extends AssetBundle
+class ImportCsvContentAsset extends AssetBundle
 {
     public $sourcePath = '@skeeks/cms/importCsv/assets';
 }
