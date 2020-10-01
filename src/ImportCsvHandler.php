@@ -8,6 +8,7 @@
 
 namespace skeeks\cms\importCsv;
 
+use skeeks\cms\backend\widgets\SelectModelDialogStorageFileSrcWidget;
 use skeeks\cms\import\ImportHandler;
 use skeeks\cms\importCsv\models\ImportTaskCsv;
 use skeeks\cms\importCsv\widgets\ImportCsvWidget;
@@ -382,13 +383,12 @@ abstract class ImportCsvHandler extends ImportHandler
     public function renderCsvConfigForm(ActiveForm $form)
     {
         echo $form->field($this, 'file_path')->widget(
-            OneImage::className(),
+            SelectModelDialogStorageFileSrcWidget::class,
             [
-                'showPreview' => false,
-                'options'     =>
-                    [
-                        'data-form-reload' => 'true',
-                    ],
+                'visibleInput' => true,
+                'options'     => [
+                    'data-form-reload' => 'true',
+                ],
             ]
         );
 
