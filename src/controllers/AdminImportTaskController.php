@@ -6,6 +6,7 @@
  * @date 15.04.2016
  */
 namespace skeeks\cms\importCsv\controllers;
+use skeeks\cms\backend\BackendController;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\import\models\ImportTask;
 use skeeks\cms\importCsv\models\ImportTaskCsv;
@@ -21,8 +22,15 @@ use yii\widgets\ActiveForm;
  *
  * @package skeeks\cms\importCsv\controllers
  */
-class AdminImportTaskController extends AdminController
+class AdminImportTaskController extends BackendController
 {
+    public function init()
+    {
+        $this->permissionName = 'cmsImport/admin-import-task';
+        $this->generateAccessActions = false;
+        return parent::init();
+    }
+
     public function actionLoadTask()
     {
         $rr = new RequestResponse();
