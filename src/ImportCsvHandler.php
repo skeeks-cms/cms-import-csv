@@ -12,7 +12,6 @@ use skeeks\cms\backend\widgets\SelectModelDialogStorageFileSrcWidget;
 use skeeks\cms\import\ImportHandler;
 use skeeks\cms\importCsv\models\ImportTaskCsv;
 use skeeks\cms\importCsv\widgets\ImportCsvWidget;
-use skeeks\cms\modules\admin\widgets\formInputs\OneImage;
 use yii\helpers\FileHelper;
 use yii\helpers\Url;
 use yii\httpclient\Client;
