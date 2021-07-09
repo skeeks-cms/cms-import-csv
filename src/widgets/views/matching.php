@@ -40,6 +40,16 @@ CSS
     <? $all = $widget->model->getCsvColumnsData() ;?>
     <? $firstRow = $all[0] ;?>
 <?= \yii\helpers\Html::beginTag('div', $widget->options); ?>
+<?php
+$this->registerJs(<<<JS
+$(".sx-matching-unique-row input").on("change", function() {
+     $(".sx-matching-unique-row input").prop('checked', false);
+     $(this).prop('checked', true);
+     //return false;
+});
+JS
+);
+?>
     <table class="table table-striped table-bordered sx-table sx-matching-table" style="background: white;">
         <thead>
             <tr>
@@ -53,7 +63,7 @@ CSS
                     </th>
                 <? endforeach; ?>
             </tr>
-            <tr>
+            <tr class="sx-matching-unique-row">
                 <th>Уникальная колонка</th>
                 <? foreach($firstRow as $key => $value) : ?>
                     <th>
