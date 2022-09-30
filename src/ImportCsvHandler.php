@@ -147,7 +147,7 @@ abstract class ImportCsvHandler extends ImportHandler
         } else if ($this->csv_delimetr_type == static::CSV_DELIMETR_ZPT) {
             $delimetr = ',';
         } else if ($this->csv_delimetr_type == static::CSV_DELIMETR_TAB) {
-            $delimetr = '     ';
+            $delimetr = "\t";
         } else if ($this->csv_delimetr_type == static::CSV_DELIMETR_SPS) {
             $delimetr = ' ';
         } else if ($this->csv_delimetr_type == static::CSV_DELIMETR_OTHER) {
