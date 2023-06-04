@@ -307,7 +307,7 @@ abstract class ImportCsvHandler extends ImportHandler
     {
         if ($this->_root_file_path === null) {
             if ($this->file_path && Url::isRelative($this->file_path)) {
-                $this->_root_file_path = \Yii::getAlias('@frontend/web'.$this->file_path);
+                $this->_root_file_path = \Yii::getAlias('@webroot'.$this->file_path);
             } else {
 
                 $tmpFile = \Yii::getAlias('@runtime/import/'.md5($this->file_path).'.csv');
