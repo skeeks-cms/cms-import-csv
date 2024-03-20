@@ -372,9 +372,9 @@ abstract class ImportCsvHandler extends ImportHandler
 
             if ($response->isOk) {
                 return true;
-            } else {
+            } /*else {
                 var_dump($response->content);die;
-            }
+            }*/
         }
 
         return false;
