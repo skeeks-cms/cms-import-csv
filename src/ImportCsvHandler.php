@@ -310,7 +310,7 @@ abstract class ImportCsvHandler extends ImportHandler
                 $this->_root_file_path = \Yii::getAlias('@webroot'.$this->file_path);
             } else {
 
-                $tmpFile = \Yii::getAlias('@runtime/import/'.md5($this->file_path).'.csv');
+                $tmpFile = \Yii::getAlias('@runtime/import-csv/'.md5($this->file_path).'.csv');
                 //Если существует временный файл
                 if (file_exists($tmpFile)) {
                     //Если временный файл создан менее 5 минут назад, то можно использовать этот файл
@@ -322,7 +322,7 @@ abstract class ImportCsvHandler extends ImportHandler
 
                 //Если файл вообще существует и он еще не скачивался
                 if ($this->isFileExists) {
-                    $runtimeDir = \Yii::getAlias('@runtime/import/');
+                    $runtimeDir = \Yii::getAlias('@runtime/import-csv/');
                     FileHelper::createDirectory($runtimeDir);
 
                     $client = new Client();
@@ -336,6 +336,8 @@ abstract class ImportCsvHandler extends ImportHandler
                         $fp = fopen($this->_root_file_path, "w"); // ("r" - считывать "w" - создавать "a" - добовлять к тексту),мы создаем файл
                         fwrite($fp, $response->content);
                         fclose($fp);
+                    } else {
+                        print_r($response->content);die;
                     }
                 }
             }
@@ -370,6 +372,8 @@ abstract class ImportCsvHandler extends ImportHandler
 
             if ($response->isOk) {
                 return true;
+            } else {
+                var_dump($response->content);die;
             }
         }
 
