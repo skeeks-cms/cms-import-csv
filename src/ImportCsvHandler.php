@@ -221,7 +221,12 @@ abstract class ImportCsvHandler extends ImportHandler
                 if (\Yii::$app->charset != $this->csv_source_charset) {
                     $encodedData = [];
                     foreach ($data as $row) {
-                        $row = iconv($this->csv_source_charset, \Yii::$app->charset, (string) $row);
+                        try {
+                            $row = iconv($this->csv_source_charset, \Yii::$app->charset, (string) $row);
+                        } catch (\Exception $exception) {
+                            
+                        }
+                        
                         $encodedData[] = $row;
                     }
 
