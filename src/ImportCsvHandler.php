@@ -365,22 +365,34 @@ abstract class ImportCsvHandler extends ImportHandler
             return false;
         }
 
-        if (Url::isRelative($this->file_path)) {
-            if ($this->rootFilePath && file_exists($this->rootFilePath)) {
-                return true;
+        try {
+            if (Url::isRelative($this->file_path)) {
+                if ($this->rootFilePath && file_exists($this->rootFilePath)) {
+                    return true;
+                }
+            } else {
+                
+                $client = new Client();
+                $request = $client->createRequest()
+                    ->addHeaders(['user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'])
+                    ->setUrl($this->file_path)
+                    ->setOptions(['maxRedirects' => 2])
+                    ;
+                
+                $response = $request->send();
+    
+                if ($response->isOk) {
+                    return true;
+                } else {
+                    /*var_dump($request->url);
+                    var_dump($response->content);
+                    die;*/
+                }
             }
-        } else {
-            $client = new Client();
-            $response = $client->createRequest()
-                ->setUrl($this->file_path)
-                ->send();
-
-            if ($response->isOk) {
-                return true;
-            } /*else {
-                var_dump($response->content);die;
-            }*/
+        } catch (\Exception $exception) {
+            return false;
         }
+        
 
         return false;
     }
